@@ -4,8 +4,13 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Загрузка Фото</title>
-  <link href="style.css" rel="stylesheet" />
+
+  <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Подключение стилей и скрипта -->
+  <link href="style.css" rel="stylesheet" />
+  <script defer src="script.js"></script>
 </head>
 <body class="bg-gray-100 min-h-screen flex items-center justify-center p-4">
   <div class="bg-white p-8 rounded-2xl shadow-lg max-w-md w-full text-center">
@@ -21,23 +26,5 @@
       <img id="preview" class="rounded-xl max-w-full h-auto mx-auto" />
     </div>
   </div>
-
-  <script>
-    const fileInput = document.getElementById('fileInput');
-    const preview = document.getElementById('preview');
-    const previewContainer = document.getElementById('previewContainer');
-
-    fileInput.addEventListener('change', (e) => {
-      const file = e.target.files[0];
-      if (!file) return;
-
-      const reader = new FileReader();
-      reader.onload = (event) => {
-        preview.src = event.target.result;
-        previewContainer.classList.remove('hidden');
-      };
-      reader.readAsDataURL(file);
-    });
-  </script>
 </body>
 </html>
