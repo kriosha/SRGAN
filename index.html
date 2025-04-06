@@ -4,26 +4,22 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Загрузка Фото</title>
-
-  <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
-
-  <!-- Подключение стилей и скрипта -->
   <link href="style.css" rel="stylesheet" />
   <script defer src="script.js"></script>
 </head>
-<body class="bg-gray-100 min-h-screen flex items-center justify-center p-4">
-  <div class="bg-white p-8 rounded-2xl shadow-lg max-w-md w-full text-center">
-    <h1 class="text-2xl font-bold mb-4">Загрузите свою фотографию</h1>
+<body class="bg-gradient-to-br from-blue-100 to-blue-300 min-h-screen flex items-center justify-center p-6">
+  <div class="bg-white/80 backdrop-blur-md p-10 rounded-2xl shadow-2xl max-w-lg w-full text-center border border-white/30">
+    <h1 class="text-3xl font-extrabold text-gray-800 mb-6">📸 Загрузите фото</h1>
     <input
       id="fileInput"
       type="file"
       accept="image/*"
-      class="mb-4 block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
+      class="mb-6 block w-full text-sm text-gray-600 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:font-semibold file:bg-blue-600 file:text-white hover:file:bg-blue-700 transition-all duration-200"
     />
-    <div id="previewContainer" class="mt-4 hidden">
-      <p class="mb-2 text-gray-600">Предпросмотр:</p>
-      <img id="preview" class="rounded-xl max-w-full h-auto mx-auto" />
+    <div id="previewContainer" class="hidden transition-opacity duration-300">
+      <p class="mb-2 text-gray-700 font-medium">Предпросмотр:</p>
+      <img id="preview" class="rounded-xl mx-auto max-w-full max-h-[600px] border border-gray-300 shadow-md" />
     </div>
   </div>
 </body>
