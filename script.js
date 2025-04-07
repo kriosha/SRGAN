@@ -1,89 +1,97 @@
-// const fileInput = document.getElementById('fileInput');
-const originalImage = document.getElementById('originalImage');
-const originalSize = document.getElementById('originalSize');
-const scaleInput = document.getElementById('scaleInput');
-const scaleWarning = document.getElementById('scaleWarning');
-const progressContainer = document.getElementById('progressContainer');
-const progressBar = document.getElementById('progressBar');
-const resultImage = document.getElementById('resultImage');
+const fileInput = document.getElementById("fileInput");
+const originalImage = document.getElementById("originalImage");
+const originalSize = document.getElementById("originalSize");
+const resultImage = document.getElementById("resultImage");
+const resultSize = document.getElementById("resultSize");
+const scaleSelect = document.getElementById("scaleSelect");
+const scaleWarning = document.getElementById("scaleWarning");
+const progressContainer = document.getElementById("progressContainer");
+const progressBar = document.getElementById("progressBar");
+const downloadBtn = document.getElementById("downloadBtn");
 
-let imageWidth = 0;
-let imageHeight = 0;
+let originalImg = null;
+let isProcessing = false;
 
-// Загрузка изображения
-fileInput.addEventListener('change', (e) => {
+function showBusyWarning() {
+  alert("Пожалуйста, подождите завершения обработки изображения.");
+}
+
+fileInput.addEventListener("change", (e) => {
+  if (isProcessing) return showBusyWarning();
+
   const file = e.target.files[0];
   if (!file) return;
 
+	//Добавить ограничение?
+
   const reader = new FileReader();
   reader.onload = (event) => {
-    originalImage.src = event.target.result;
-    originalImage.classList.remove('hidden');
-
     const img = new Image();
     img.onload = () => {
-      imageWidth = img.width;
-      imageHeight = img.height;
-      originalSize.textContent = `Размер: ${imageWidth} x ${imageHeight}`;
+      originalImg = img;
+      originalImage.src = img.src;
+      originalImage.classList.remove("hidden");
+      originalSize.textContent = `Размер: ${img.width} x ${img.height}`;
+      processImage();
     };
     img.src = event.target.result;
   };
   reader.readAsDataURL(file);
 });
 
-// Проверка разрешения и имитация SRGAN
-scaleInput.addEventListener('input', () => {
-  const value = scaleInput.value.trim().toLowerCase();
-
-  let newWidth = 0;
-  if (value.endsWith('x')) {
-    const factor = parseFloat(value.replace('x', ''));
-    newWidth = imageWidth * factor;
-  } else {
-    newWidth = parseInt(value);
-  }
-
-  if (newWidth > 4096) {
-    scaleWarning.classList.remove('hidden');
-  } else {
-    scaleWarning.classList.add('hidden');
-  }
+scaleSelect.addEventListener("change", () => {
+  if (isProcessing) return showBusyWarning();
+  if (originalImg) processImage();
 });
 
-// Клик по Enter или потеря фокуса
-scaleInput.addEventListener('change', () => {
-  const value = scaleInput.value.trim().toLowerCase();
-  let newWidth = 0;
+function processImage() {
+  const scale = parseFloat(scaleSelect.value);
+  const newWidth = Math.round(originalImg.width * scale);
+  const newHeight = Math.round(originalImg.height * scale);
 
-  if (value.endsWith('x')) {
-    const factor = parseFloat(value.replace('x', ''));
-    newWidth = imageWidth * factor;
-  } else {
-    newWidth = parseInt(value);
-  }
 
-  if (newWidth > 4096 || isNaN(newWidth)) {
-    scaleWarning.classList.remove('hidden');
-    return;
-  }
+  isProcessing = true;
+  disableInputs(true);
 
-  scaleWarning.classList.add('hidden');
-  progressContainer.classList.remove('hidden');
-  progressBar.style.width = '0%';
-  resultImage.classList.add('hidden');
+  progressContainer.classList.remove("hidden");
+  progressBar.style.width = "0%";
+  resultImage.classList.add("hidden");
+  resultSize.textContent = "";
+  downloadBtn.classList.add("hidden");
 
-  // Симуляция загрузки (замени здесь на вызов SRGAN позже)
   let progress = 0;
   const interval = setInterval(() => {
     progress += 10;
     progressBar.style.width = `${progress}%`;
     if (progress >= 100) {
       clearInterval(interval);
-      setTimeout(() => {
-        progressContainer.classList.add('hidden');
-        resultImage.src = originalImage.src; // <-- Здесь заменить на SRGAN результат
-        resultImage.classList.remove('hidden');
-      }, 500);
+
+      // Увеличение изображения
+      const canvas = document.createElement("canvas");
+      canvas.width = newWidth;
+      canvas.height = newHeight;
+      const ctx = canvas.getContext("2d");
+      ctx.drawImage(originalImg, 0, 0, newWidth, newHeight);
+
+      const dataUrl = canvas.toDataURL("image/png");
+      resultImage.src = dataUrl;
+      resultImage.classList.remove("hidden");
+      resultSize.textContent = `Новый размер: ${newWidth} x ${newHeight}`;
+
+      downloadBtn.href = dataUrl;
+      downloadBtn.classList.remove("hidden");
+
+      isProcessing = false;
+      disableInputs(false);
     }
-  }, 200);
-});
+  }, 100);
+}
+
+function disableInputs(disabled) {
+  fileInput.disabled = disabled;
+  scaleSelect.disabled = disabled;
+  fileInput.classList.toggle("opacity-50", disabled);
+  scaleSelect.classList.toggle("opacity-50", disabled);
+  fileInput.classList.toggle("cursor-not-allowed", disabled);
+  scaleSelect.classList.toggle("cursor-not-allowed", disabled);
+}

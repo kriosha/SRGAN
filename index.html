@@ -7,13 +7,27 @@
   <script defer src="script.js"></script>
 </head>
 
-<body class="bg-gradient-to-r from-blue-300 to-blue-500 min-h-screen flex items-center justify-center p-6">
-  <div class="w-full max-w-6xl bg-white rounded-2xl shadow-xl p-8">
-    <h1 class="text-3xl font-bold mb-8 text-center">🧠 Увеличение изображения через SRGAN</h1>
+<body class="bg-gradient-to-br from-blue-300 to-red-300 min-h-screen flex items-center justify-center p-6 opacity-90">
+  <div class="w-full max-w-6xl bg-white rounded-2xl shadow-xl p-8 ">
+    <h1 class="text-3xl font-bold mb-8 text-center">Увеличение разрешения изображения через SRGAN</h1>
+
+    <div class="flex justify-center items-center mb-6">
+      <label for="scaleSelect" class="mr-3 text-sm font-medium text-gray-700">Масштаб:</label>
+      <select
+        id="scaleSelect"
+        class="text-sm text-gray-700 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 px-3 py-1"
+      >
+        <option value="1.2">1.2x</option>
+        <option value="1.5">1.5x</option>
+        <option value="2">2x</option>
+        <option value="2.5">2.5x</option>
+        <option value="3">3x</option>
+      </select>
+    </div>
 
     <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
       
-      <!-- Левая колонка: загрузка -->
+      <!-- Левая колонка -->
       <div class="bg-gray-50 p-6 rounded-xl shadow-inner">
         <h2 class="text-xl font-semibold mb-4">Исходное изображение</h2>
         <input
@@ -24,17 +38,9 @@
         />
         <img id="originalImage" class="rounded-xl max-w-full mx-auto hidden" />
         <p id="originalSize" class="text-sm text-gray-600 mt-2"></p>
-
-        <label for="scaleInput" class="block mt-6 text-sm font-medium text-gray-700">Введите новое разрешение (например, 2x или 1024):</label>
-        <input
-          id="scaleInput"
-          type="text"
-          class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-        />
-        <p id="scaleWarning" class="text-red-600 text-sm mt-1 hidden">Слишком большое разрешение! Пожалуйста, введите значение меньше 4096px.</p>
       </div>
 
-      <!-- Правая колонка: процесс и результат -->
+      <!-- Правая колонка -->
       <div class="bg-gray-50 p-6 rounded-xl shadow-inner text-center">
         <h2 class="text-xl font-semibold mb-4">Результат</h2>
 
@@ -46,9 +52,11 @@
         </div>
 
         <img id="resultImage" class="rounded-xl max-w-full mx-auto hidden mt-4" />
+        <p id="resultSize" class="text-sm text-gray-600 mt-2"></p>
+        <a id="downloadBtn" href="#" download class="hidden mt-4 inline-block bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 transition-all">
+          Скачать
+        </a>
       </div>
-
     </div>
   </div>
 </body>
-</html>
